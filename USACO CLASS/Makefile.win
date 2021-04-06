@@ -1,0 +1,28 @@
+# Project: NameNum
+# Makefile created by Dev-C++ 5.11
+
+CPP      = g++.exe -D__DEBUG__
+CC       = gcc.exe -D__DEBUG__
+WINDRES  = windres.exe
+OBJ      = nameNum2.o
+LINKOBJ  = nameNum2.o
+LIBS     = -L"C:/MinGW/lib" -L"C:/MinGW/mingw32/lib" -static-libstdc++ -static-libgcc -pg -lobjc -g3 -nostdlib -mwindows -s
+INCS     = -I"C:/MinGW/include" -I"C:/MinGW/lib/gcc/mingw32/9.2.0/include"
+CXXINCS  = -I"C:/MinGW/include" -I"C:/MinGW/lib/gcc/mingw32/9.2.0/include" -I"C:/MinGW/lib/gcc/mingw32/9.2.0/include/c++"
+BIN      = nameNum.exe
+CXXFLAGS = $(CXXINCS) -pg -g3 -nostdlib -mwindows
+CFLAGS   = $(INCS) -pg -g3 -nostdlib -mwindows
+RM       = rm.exe -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+nameNum2.o: nameNum2.cpp
+	$(CPP) -c nameNum2.cpp -o nameNum2.o $(CXXFLAGS)
