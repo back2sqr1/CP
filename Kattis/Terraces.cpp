@@ -24,8 +24,8 @@ void join(vector<int>& rt, int a, int b) {
 int main() {
     cin >> R >> C;
 
-    for(int i = 0; i < R; i++) {
-        for(int j = 0; j < C; j++) {
+    for(int i = 0; i < C; i++) {
+        for(int j = 0; j < R; j++) {
             cin >> grid[i][j];
         }
     }
@@ -33,8 +33,8 @@ int main() {
     vector<bool> res(R*C, true);
     vector<int> rt(R*C, -1);
 
-    for(int i = 0; i < R; i++) {
-        for(int j = 0; j < C; j++) {
+    for(int i = 0; i < C; i++) {
+        for(int j = 0; j < R; j++) {
             if(i > 0) {
                 if(grid[i][j] == grid[i-1][j]) join(rt, spot(i,j), spot(i-1,j));
                 else if(grid[i][j] < grid[i-1][j])  res[spot(i-1,j)] = false;
