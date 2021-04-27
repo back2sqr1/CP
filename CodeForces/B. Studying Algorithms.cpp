@@ -6,7 +6,6 @@ typedef vector<pair<int,int>> vpi;
 typedef pair<int,int> pi;
 typedef long long ll; 
 typedef vector<ll> vll;
-typedef vector<vector<int>> vvi;
 #define FIO ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 #define FOR(i,a,b) for (int i = (a); i < (b); ++i)
 #define F0R(i,a) FOR(i,0,a)
@@ -21,45 +20,29 @@ typedef vector<vector<int>> vvi;
 #define s second
 #define mp make_pair
 #define pb push_back
-void setIO(string name = "") { 
-    ios_base::sync_with_stdio(0); cin.tie(0); 
-   
-    if (sz(name)) {
-        freopen((name+".txt").c_str(), "r", stdin); 
-        freopen((name+"-23.txt").c_str(), "w", stdout);
-    }
-}
-bool cmp(const pair<int,int>&a, const pair<int,int> &b)
-{
-	if(a.f==b.f)
-	return a.s<b.s;
-	
-	return a.f<b.f;
-}
+const int MOD= 1e9+7, SZ=1e7+100;
 
-void bfs()
-{
-	
-}
-void dfs(int node)
-{
-	
-}
-void check()
-{
-	
-}
 void solve()
 {
-   		
+	int x, n; cin>>n>>x;
+	vi v(n);
+	trav(a, v)
+		cin>>a; 
+	sort(all(v));
+	int ans=0;
+	for(int i=0; i<n && x>0; i++)
+	{
+		if(x>=v[i])
+		ans++;
+		
+		x-=v[i];
+	}
+	cout<<ans<<endl;
 }
-
 int main() {
     FIO;
-	int t; cin>>t;
-	while(t--) {
-		solve();
-	}
+    //testcases
+    solve();
 }
 
 

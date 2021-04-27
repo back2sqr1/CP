@@ -21,45 +21,36 @@ typedef vector<vector<int>> vvi;
 #define s second
 #define mp make_pair
 #define pb push_back
-void setIO(string name = "") { 
-    ios_base::sync_with_stdio(0); cin.tie(0); 
-   
-    if (sz(name)) {
-        freopen((name+".txt").c_str(), "r", stdin); 
-        freopen((name+"-23.txt").c_str(), "w", stdout);
-    }
-}
-bool cmp(const pair<int,int>&a, const pair<int,int> &b)
+const int MOD= 1e9+7, SZ=1e5+1;
+ 
+void solve(int n)
 {
-	if(a.f==b.f)
-	return a.s<b.s;
-	
-	return a.f<b.f;
-}
+	vi a(n),b(n);
+	trav(x, a) cin>>x;
+	trav(x, b) cin>>x;
+	vvi dp(n+1, vector<int>(n+1, 0));
+	for(int i=0; i<=n; i++)
+	{
+		for(int j=0; j<=n; j++)
+		{
+			if(i==0 || j==0)
+			{
+				dp[i][j]=0;			
+			}
+			else if(a[i-1]==b[j-1])
+			{
+				dp[i][j]=dp[i-1][j-1]+1;
+			}
+			else
+			dp[i][j]=max(dp[i-1][j], dp[i][j-1]);
+		}
+	}
 
-void bfs()
-{
-	
+	cout<<dp[n][n]<<endl;
 }
-void dfs(int node)
-{
-	
-}
-void check()
-{
-	
-}
-void solve()
-{
-   		
-}
-
 int main() {
     FIO;
-	int t; cin>>t;
-	while(t--) {
-		solve();
-	}
+    //testcases
+    int n; cin>>n;
+    solve(n);
 }
-
-
