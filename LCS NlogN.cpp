@@ -25,34 +25,42 @@ const int MOD= 1e9+7, SZ=1e5+1;
  
 void solve(int n)
 {
-	vi a(n),b(n);
-	trav(x, a) cin>>x;
-	trav(x, b) cin>>x;
-	vvi dp(2, vector<int>(n+1, 0));
-	bool bi;
-	for(int i=0; i<=n; i++)
-	{
-		bi=i&1;
-		for(int j=0; j<=n; j++)
-		{
-			if(i==0 || j==0)
-			{
-				dp[bi][j]=0;			
-			}
-			else if(a[i-1]==b[j-1])
-			{
-				dp[bi][j]=dp[1-bi][j-1]+1;
-			}
-			else
-			dp[bi][j]=max(dp[1-bi][j], dp[bi][j-1]);
-		}
+	vi lis;
+	int a[n], b[n], c[n], pos[n];
+	for (int i = 1; i <= n; ++i) {
+		cin >> a[i];
+		// pos is the inverse of a
+		pos[a[i]] = i;
+	}
+	for (int i = 1; i <= n; ++i) {
+		cin >> b[i];
+	}
+	for (int i = 1; i <= n; ++i) {
+		c[i] = pos[b[i]];
 	}
 
-	cout<<dp[bi][n]<<endl;
+//	F1R(i, n+1) cout<<pos[i]<<' ';
+//	cout<<endl;
+//	
+//	F1R(i, n+1) cout<<c[i]<<' ';
+//	cout<<endl;
 	
+	for (int i = 1; i <= n; ++i) {
+		int p = lower_bound(begin(lis), end(lis), c[i]) - begin(lis);
+		if (p == lis.size())
+			lis.push_back(c[i]);
+		else
+			lis[p] = c[i];
+	}
+//	for(int i=0; i<lis.size(); i++)
+//		cout<<lis[i]<<' ';
+		
+//	cout<<endl;
+	cout << lis.size() << '\n';
 }
-int main()
-{
-	int n; cin>>n;
-	solve(n);
+int main() {
+    FIO;
+    //testcases
+    int n; cin>>n;
+    solve(n);
 }
