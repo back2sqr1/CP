@@ -29,7 +29,6 @@ void setIO(string name = "") {
         freopen((name+"-23.txt").c_str(), "w", stdout);
     }
 }
-
 bool cmp(const pair<int,int>&a, const pair<int,int> &b)
 {
 	if(a.f==b.f)
@@ -37,9 +36,13 @@ bool cmp(const pair<int,int>&a, const pair<int,int> &b)
 	
 	return a.f<b.f;
 }
+bool coprime(int a, int b)
+{
+	return __gcd(a, b)==1;
+}
 void bfs()
 {
-		
+	
 }
 void dfs(int node)
 {
@@ -47,38 +50,37 @@ void dfs(int node)
 }
 void check()
 {
-	  
+	
 }
-void solve()
-{
-	int n, k; cin>>n>>k;
-	vi v(n);
-	trav(x, v) cin>>x;
-	int i=0;
-	while(k>0 && i<n-1)
-	{
-		if(v[i]<=k)
-		{
-			k-=v[i];
-			v[n-1]+=v[i];
-			v[i]=0;
+void solve( ) {
+	int n;
+	cin >> n;
+
+	vector<int> ans;
+
+	long long prod = 1ll;
+	for ( int i = 1; i < n; i++ ) {
+		if ( gcd( i, n ) == 1 ) {
+			ans.push_back( i );
+			prod = prod * i % n;
 		}
-		else
-		{
-			v[i]-=k;
-			v[n-1]+=k;
-			k=0;
-		}
-		i++;
 	}
-	for(int x: v)
-	{
-		cout<<x<<' ';
-	}
-	cout<<endl;
+
+	int except = 0;
+	if ( prod != 1 ) {
+		except = ans.back();
+		cout << ans.size() - 1 << '\n';
+	} else
+		cout << ans.size() << '\n';
+
+	for ( int& val : ans )
+		if ( val != except )
+			cout << val << ' ';
+	cout << '\n';
+}
+
+int main() {
     FIO;
-    int t; cin>>t;
-    while(t--)
 	solve();
 }
 
