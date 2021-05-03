@@ -68,45 +68,38 @@ void check()
 {
 
 }
-ll sum(vll a, vll b)
+bool pos(vi v)
 {
-	ll ans=0;
-	for(int i=0; i<a.size(); i++)
-	ans+=a[i]*b[i];
-	
-	return ans;
+	int s=0;
+    for (int i:v)
+    	s+=i;
+    if (s%2)
+    return 0;
+    bitset<200005> b;
+    b[0]=1;
+    for (int i:v)
+    b|=(b<<i);
+    
+    //cout<<b<<endl;
+    return b[s/2];
 }
 void solve()
 {
-	int n;
-	cin >> n;
-	vector<ll> a(n), b(n);
-	for (auto& x : a) cin >> x;
-	for (auto& x : b) cin >> x;
-	
-	vector<ll> pr(n + 1, 0);
-	
-	for (int i = 0; i < n; ++i)
-		pr[i + 1] = pr[i] + a[i] * b[i];
-	ll ans = pr[n];
-	for (int c = 0; c < n; ++c) {
-		ll cur = a[c] * b[c];
-		for (int l = c - 1, r = c + 1; l >= 0 && r < n; --l, ++r) { //first loop, includes center
-		  cur += a[l] * b[r];
-		  cur += a[r] * b[l];
-		  cout<<l<<' '<<r<<' '<<cur + pr[l] + (pr[n] - pr[r + 1])<<' '<<1<<endl;
-		  ans = max(ans, cur + pr[l] + (pr[n] - pr[r + 1])); // left pre + new swap + right pre (could do suffix)
-		}
-		cur = 0;
-		for (int l = c, r = c + 1; l >= 0 && r < n; --l, ++r) { //does not include center
-		  cur += a[l] * b[r];
-		  cur += a[r] * b[l];
-		  ans = max(ans, cur + pr[l] + (pr[n] - pr[r + 1]));
-		  cout<<l<<' '<<r<<' '<<cur + pr[l] + (pr[n] - pr[r + 1])<<' '<<2<<endl;
-		}
+	int n;  cin>>n;
+	vi v(n);
+	trav(x, v) cin>>x;
+	if(pos(v))
+	{
+		pi mn=mp(12, 0);
+		for(int i=0; i<n; i++)
+			mn=min(mn, mp(__builtin_ctz(v[i]), i+1));
+		printf("1\n%d", mn.s);
 	}
-	cout << ans << endl;
-	
+	else
+	{
+		cout<<0<<endl;
+		return;
+	}
 }
 
 int main() {
