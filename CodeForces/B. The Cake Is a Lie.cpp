@@ -7,6 +7,7 @@ typedef pair<int,int> pi;
 typedef long long ll; 
 typedef vector<ll> vll;
 typedef vector<vector<int>> vvi;
+typedef vector<bool> vb;
 #define FIO ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 #define FOR(i,a,b) for (int i = (a); i < (b); ++i)
 #define F0R(i,a) FOR(i,0,a)
@@ -36,47 +37,54 @@ bool cmp(const pair<int,int>&a, const pair<int,int> &b)
 	
 	return a.f<b.f;
 }
-
+int ans=0;
+struct DSU {
+	vi e; void init(int N) { e = vi(N,-1); }
+	// get representive component, uses path compression
+	int get(int x) { return e[x] < 0 ? x : e[x] = get(e[x]); }
+	bool sameSet(int a, int b) { return get(a) == get(b); }
+	int size(int x) { return -e[get(x)]; }
+	bool unite(int x, int y) { // union by size
+		x = get(x), y = get(y); if (x == y) return 0;
+		if (e[x] > e[y]) swap(x,y);
+		e[x] += e[y]; e[y] = x; return 1;
+	}
+	void show(){ for(int i: e) cout<<i<<' '; cout<<endl;}
+};
+const int SZ=20;	
 void bfs()
 {
 	
 }
+bool mark[SZ]={0};
+vvi g(SZ);
 void dfs(int node)
-{
+{	
 	
 }
+
 void check()
 {
-	
+
 }
 void solve()
-{//linear
-	int n, ans = 0; cin >> n;
-    int xr = 0;
-    vi a(n);
-    F0R(i, n) {
-    	cin >> a[i];
-    	xr ^= a[i];
-    }
-    if(xr == 0){
-    	cout << "YES" << '\n';
-    }
-    else{
-    	int t = 0, c = 0;
-    	for(int i=0;i<n;i++) {
-    		t^=a[i];
-    		if(t==xr){
-    			c++;
-    			t = 0;
-    		}
-    	}
-    	if(c >= 3 ){
-    		cout << "YES" << '\n';
-    	}
-    	else{
-	    	cout << "NO" << '\n';
-    	}
-    }
+{
+	int n, m, k; cin>>n>>m>>k;
+	vvi dp(n+1, vector<int>(m+1, 0));
+	for(int i=1; i<=n; i++)
+	for(int j=1; j<=m; j++)
+	{
+		dp[i][j]+=min(dp[i-1][j] + j, dp[i][j-1]+i);
+	}
+	
+//	for(int i=1; i<=n; i++){
+//		for(int j=1; j<=m; j++)
+//		{
+//			cout<<dp[i][j]<<' ';
+//		}
+//		cout<<endl;
+//	}
+	cout<<(dp[n][m]-1==k?"YES":"NO")<<endl;
 }
 
 int main() {

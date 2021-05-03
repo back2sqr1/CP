@@ -36,47 +36,48 @@ bool cmp(const pair<int,int>&a, const pair<int,int> &b)
 	
 	return a.f<b.f;
 }
-
+int ans=0;
+struct DSU {
+	vi e; void init(int N) { e = vi(N,-1); }
+	// get representive component, uses path compression
+	int get(int x) { return e[x] < 0 ? x : e[x] = get(e[x]); }
+	bool sameSet(int a, int b) { return get(a) == get(b); }
+	int size(int x) { return -e[get(x)]; }
+	bool unite(int x, int y) { // union by size
+		x = get(x), y = get(y); if (x == y) return 0;
+		if (e[x] > e[y]) swap(x,y);
+		e[x] += e[y]; e[y] = x; return 1;
+	}
+	int merge(int r1,int r2){ int p1=get(r1); int p2=get(r2); if(p1!=p2)  {e[p1]=p2;} else ans++;}
+	void show(){ for(int i: e) cout<<i<<' '; cout<<endl;}
+};
+const int SZ=1e5+1;	
 void bfs()
 {
 	
 }
 void dfs(int node)
 {
-	
 }
 void check()
 {
 	
 }
 void solve()
-{//linear
-	int n, ans = 0; cin >> n;
-    int xr = 0;
-    vi a(n);
-    F0R(i, n) {
-    	cin >> a[i];
-    	xr ^= a[i];
-    }
-    if(xr == 0){
-    	cout << "YES" << '\n';
-    }
-    else{
-    	int t = 0, c = 0;
-    	for(int i=0;i<n;i++) {
-    		t^=a[i];
-    		if(t==xr){
-    			c++;
-    			t = 0;
-    		}
-    	}
-    	if(c >= 3 ){
-    		cout << "YES" << '\n';
-    	}
-    	else{
-	    	cout << "NO" << '\n';
-    	}
-    }
+{
+	int n, m; cin>>n>>m;
+	DSU d; d.init(n+1);
+	ans=0;
+	while(m--){
+		int x, y; cin>>x>>y;
+		if(x==y)
+		continue;
+		
+		d.merge(x, y);
+		
+		ans++;
+	}
+	cout<<ans<<endl;
 }
 
 int main() {
