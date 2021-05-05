@@ -58,7 +58,7 @@ tcT> int lwb(V<T>& a, const T& b) { return int(lb(all(a),b)-bg(a)); }
 #define rep(a) F0R(_,a)
 #define each(a,x) for (auto& a: x)
  
-const int MOD = 998244353;
+const int MOD = 1e9+7; // 998244353;
 const int MX = 2e5+5;
 const ll INF = 1e18; // not too close to LLONG_MAX
 const db PI = acos((db)-1);
@@ -252,65 +252,43 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
- 
-/**
- * Description: modular arithmetic operations 
- * Source: 
-	* KACTL
-	* https://codeforces.com/blog/entry/63903
-	* https://codeforces.com/contest/1261/submission/65632855 (tourist)
-	* https://codeforces.com/contest/1264/submission/66344993 (ksun)
-	* also see https://github.com/ecnerwala/cp-book/blob/master/src/modnum.hpp (ecnerwal)
- * Verification: 
-	* https://open.kattis.com/problems/modulararithmetic
- */
- 
-template<int MOD, int RT> struct mint {
-	static const int mod = MOD;
-	static constexpr mint rt() { return RT; } // primitive root for FFT
-	int v; explicit operator int() const { return v; } // explicit -> don't silently convert to int
-	mint() { v = 0; }
-	mint(ll _v) { v = int((-MOD < _v && _v < MOD) ? _v : _v % MOD);
-		if (v < 0) v += MOD; }
-	friend bool operator==(const mint& a, const mint& b) { 
-		return a.v == b.v; }
-	friend bool operator!=(const mint& a, const mint& b) { 
-		return !(a == b); }
-	friend bool operator<(const mint& a, const mint& b) { 
-		return a.v < b.v; }
-	friend void re(mint& a) { ll x; re(x); a = mint(x); }
-	friend str ts(mint a) { return ts(a.v); }
-   
-	mint& operator+=(const mint& m) { 
-		if ((v += m.v) >= MOD) v -= MOD; 
-		return *this; }
-	mint& operator-=(const mint& m) { 
-		if ((v -= m.v) < 0) v += MOD; 
-		return *this; }
-	mint& operator*=(const mint& m) { 
-		v = int((ll)v*m.v%MOD); return *this; }
-	mint& operator/=(const mint& m) { return (*this) *= inv(m); }
-	friend mint pow(mint a, ll p) {
-		mint ans = 1; assert(p >= 0);
-		for (; p; p /= 2, a *= a) if (p&1) ans *= a;
-		return ans; }
-	friend mint inv(const mint& a) { assert(a.v != 0); 
-		return pow(a,MOD-2); }
-		
-	mint operator-() const { return mint(-v); }
-	mint& operator++() { return *this += 1; }
-	mint& operator--() { return *this -= 1; }
-	friend mint operator+(mint a, const mint& b) { return a += b; }
-	friend mint operator-(mint a, const mint& b) { return a -= b; }
-	friend mint operator*(mint a, const mint& b) { return a *= b; }
-	friend mint operator/(mint a, const mint& b) { return a /= b; }
-};
- 
-
- 
+int N,X;
 // make sure to intialize ALL GLOBAL VARS between tcs!
- int main() {
-	setIO();
+
+void solve()
+{
+	re(N,X); //read
+	vi W(N); re(W); //read
+	int sum=0;
+	vi ans;
+	F0R(i, N)
+	{
+		if(sum+W[i]!=X)
+		ans.pb(W[i]), sum+=W[i];
+		else
+		{
+			if(i==N-1)
+			{
+				ps("NO");
+				return ;
+			}
+			
+			sum+=W[i+1]+W[i];
+			ans.pb(W[i+1]); ans.pb(W[i]);
+			i++;
+		}
+	}
+	ps("YES");
+	each(t, ans) pr(t,' ');
+	ps();
 	
 }
- 
+
+int main() {
+   	
+    int t; re(t);
+    while(t--)
+	solve();
+}
+
+
