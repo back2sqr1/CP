@@ -59,7 +59,7 @@ tcT> int lwb(V<T>& a, const T& b) { return int(lb(all(a),b)-bg(a)); }
 #define rep(a) F0R(_,a)
 #define each(a,x) for (auto& a: x)
  
-const int MOD = 1e9+7; // 998244353;
+const int MOD = 998244353;
 const int MX = 2e5+5;
 const ll INF = 1e18; // not too close to LLONG_MAX
 const db PI = acos((db)-1);
@@ -254,25 +254,27 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N;
+int N;
+const int SZ=1e6+1;
 void solve()
 {
 	re(N);
-	vi v(N); re(v);
-	map<int,int> m;
-	ll ans=0;
-	for(int i=0; i<N; i++)
-	{
-		int x=v[i];
-		ans+=m[x-i]++;
+	ll pre[N+1];
+	pre[1]=1LL;
+	pre[2]=2LL;
+	pre[3]=9LL;	
+	ll fact=6;
+	for(int i=4; i<=N; i++){
+		fact*=i;
+		fact%=MOD;
+		pre[i]=(((pre[i-1]-1)%MOD*i)%MOD+fact)%MOD;
 	}
-	cout<<ans<<endl;
+	ps(pre[N]);
 }
 int main() {
-   	
-    int t; re(t);
-    while(t--)
+//    int t; re(t);
+//    while(t--)
 	solve();
-}
+}           
    	
 

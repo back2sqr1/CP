@@ -52,7 +52,6 @@ tcT> int lwb(V<T>& a, const T& b) { return int(lb(all(a),b)-bg(a)); }
  
 // loops
 #define FOR(i,a,b) for (int i = (a); i < (b); ++i)
-#define F1R(i, a) FOR(i, 1, a+1)
 #define F0R(i,a) FOR(i,0,a)
 #define ROF(i,a,b) for (int i = (b)-1; i >= (a); --i)
 #define R0F(i,a) ROF(i,0,a)
@@ -254,25 +253,20 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N;
+ll A, B;
 void solve()
 {
-	re(N);
-	vi v(N); re(v);
-	map<int,int> m;
-	ll ans=0;
-	for(int i=0; i<N; i++)
-	{
-		int x=v[i];
-		ans+=m[x-i]++;
-	}
-	cout<<ans<<endl;
+	re(A, B);
+	if(B==1)
+	cout<<"NO"<<endl;
+	else 
+	cout<<"YES\n"<<A<<' '<<A*B<<' '<<A*(B+1)<<endl;
 }
+ 
 int main() {
    	
     int t; re(t);
     while(t--)
 	solve();
 }
-   	
-
+ 
