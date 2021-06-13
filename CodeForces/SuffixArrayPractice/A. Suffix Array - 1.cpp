@@ -254,67 +254,53 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N, L, R, S;
+ll N;
 void solve()
 {
-	re(N, L, R, S);
-	ll d=R-L+1;
-	ll cur=0, t=N;
-	vi ans;
-	FOR(i, N-d+1, N+1)
+	string s; re(s);
+	s+='$';
+	N=s.length();
+	vi p(N), c(N); //ans, equvialence classes
 	{
-		ans.pb(i);
-		cur+=i;
-	}
-	if(cur<S || S<d*(d+1)/2)
-	{
-		ps(-1);
-		return;
-	}
-	ll dif=abs(cur-S);
-	int i=0;
-	while(i<d && dif)
-	{
-		if(ans[i]<dif+1+i)
+		vector<pair<char, int>> a(N);
+		F0R(i, N) a[i]={s[i], i};
+		sort(all(a));
+		
+		F0R(i, N) p[i]=a[i].s;
+		c[p[0]]=0;
+		F1R(i, N-1)
 		{
-			dif-=(ans[i]-1-i);
-			ans[i]=i+1;
+			c[p[i]]=c[p[i-1]];
+			if(a[i].f!=a[i-1].f)
+			c[p[i]]++;
 		}
-		else
+	}
+	ll k=0;
+	while((1<<k)<N && c[p[N - 1]] < N - 1)
+	{
+		vector<pair<pair<int,int>, int>> a(N);
+		F0R(i, N){
+			a[i]={{c[i], c[(i+(1<<k))%N]}, i};
+		}
+		sort(all(a));
+		F0R(i, N) p[i]=a[i].s;
+		c[p[0]]=0;
+		F1R(i, N-1)
 		{
-			ans[i]-=dif;
-			dif=0;
+			c[p[i]]=c[p[i-1]];
+			if(a[i].f!=a[i-1].f)
+			c[p[i]]++;
 		}
-		//ps(ans, dif);
-		i++;
+		k++;
 	}
-	//ps(ans);
-	bool p[N+1]={0};
-	
-	each(x, ans)
-	p[x]=1;
-	
-	int cnt=1;
-
-	for(i=1; i<=N && cnt<=L-1; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	each(x, ans)
-	pr(x, " "), cnt++;
-	for(; i<=N && cnt<=N; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	ps();
+	F0R(i, N)
+	cout<<p[i]<<' ';//<<s.substr(p[i], N-p[i])<<endl;
+	cout<<endl;
 }
 int main() {
-   	int t;
-    re(t);
-    F0R(i, t)
-		solve();
+//	int t; re(t);
+//	while(t--)
+	solve();
 }
 
 

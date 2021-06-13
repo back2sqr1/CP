@@ -254,67 +254,38 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N, L, R, S;
+ll N;
+const int SZ= 1e5+1;
 void solve()
 {
-	re(N, L, R, S);
-	ll d=R-L+1;
-	ll cur=0, t=N;
-	vi ans;
-	FOR(i, N-d+1, N+1)
+	re(N);
+	vl dp(N, 0), v(N);
+	re(v);
+	map<ll, ll> val;
+	ll ans=0;
+	F0R(i, N)
 	{
-		ans.pb(i);
-		cur+=i;
-	}
-	if(cur<S || S<d*(d+1)/2)
-	{
-		ps(-1);
-		return;
-	}
-	ll dif=abs(cur-S);
-	int i=0;
-	while(i<d && dif)
-	{
-		if(ans[i]<dif+1+i)
+		if(i>0)
+		dp[i]=dp[i-1];
+		
+		if(val.count(v[i]))
 		{
-			dif-=(ans[i]-1-i);
-			ans[i]=i+1;
+			dp[i]+=val[v[i]];
 		}
-		else
-		{
-			ans[i]-=dif;
-			dif=0;
-		}
-		//ps(ans, dif);
-		i++;
+		val[v[i]]+=(i+1);
+		ans+=dp[i];
+		
 	}
-	//ps(ans);
-	bool p[N+1]={0};
-	
-	each(x, ans)
-	p[x]=1;
-	
-	int cnt=1;
-
-	for(i=1; i<=N && cnt<=L-1; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	each(x, ans)
-	pr(x, " "), cnt++;
-	for(; i<=N && cnt<=N; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	ps();
+	ps(ans);
 }
 int main() {
-   	int t;
-    re(t);
-    F0R(i, t)
-		solve();
+//	ps(dp);
+
+	int t; re(t);
+	while(t--)
+	solve();
+
+	
 }
 
 

@@ -17,7 +17,7 @@ using vs = vector<str>;
 using vpi = vector<pi>;
 using vpl = vector<pl>; 
 using vpd = vector<pd>;
- 
+using vvi = vector<vi>;
 #define tcT template<class T
 #define tcTU tcT, class U
 // ^ lol this makes everything look weird but I'll try it
@@ -83,14 +83,7 @@ tcT> bool ckmin(T& a, const T& b) {
 tcT> bool ckmax(T& a, const T& b) {
 	return a < b ? a = b, 1 : 0; }
  
-tcTU> T fstTrue(T lo, T hi, U f) {
-	hi ++; assert(lo <= hi); // assuming f is increasing
-	while (lo < hi) { // find first index such that f is true 
-		T mid = lo+(hi-lo)/2;
-		f(mid) ? hi = mid : lo = mid+1; 
-	} 
-	return lo;
-}
+
 tcTU> T lstTrue(T lo, T hi, U f) {
 	lo --; assert(lo <= hi); // assuming f is decreasing
 	while (lo < hi) { // find first index such that f is true 
@@ -254,67 +247,98 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N, L, R, S;
-void solve()
+ll N;
+char board[25][25][3];
+set<int> ans;
+bool vis[25][25][19683]; //19683 3^9
+int pow3[10];
+void print(int b)
 {
-	re(N, L, R, S);
-	ll d=R-L+1;
-	ll cur=0, t=N;
-	vi ans;
-	FOR(i, N-d+1, N+1)
-	{
-		ans.pb(i);
-		cur+=i;
+	int t=b;
+	vvi cells(3, vi(3, 0));
+	for (int i=0; i<3; i++)
+	for (int j=0; j<3; j++) {
+	  cells[i][j] = b%3;
+	  b /= 3;
 	}
-	if(cur<S || S<d*(d+1)/2)
-	{
-		ps(-1);
-		return;
-	}
-	ll dif=abs(cur-S);
-	int i=0;
-	while(i<d && dif)
-	{
-		if(ans[i]<dif+1+i)
-		{
-			dif-=(ans[i]-1-i);
-			ans[i]=i+1;
-		}
-		else
-		{
-			ans[i]-=dif;
-			dif=0;
-		}
-		//ps(ans, dif);
-		i++;
-	}
-	//ps(ans);
-	bool p[N+1]={0};
+	each(x, cells)
+	ps(x);
 	
-	each(x, ans)
-	p[x]=1;
+	ps(t);
+}
+bool win(int b)
+{
+	int cells[3][3];
+	for (int i=0; i<3; i++)
+	for (int j=0; j<3; j++) {
+	  cells[i][j] = b%3;
+	  b /= 3;
+	}
+	for (int r=0; r<3; r++) {
+		if (cells[r][0] == 1 && cells[r][1] == 2 && cells[r][2] == 2) return true;
+		if (cells[r][0] == 2 && cells[r][1] == 2 && cells[r][2] == 1) return true;
+	}
+	for (int c=0; c<3; c++) {
+		if (cells[0][c] == 1 && cells[1][c] == 2 && cells[2][c] == 2) return true;
+		if (cells[0][c] == 2 && cells[1][c] == 2 && cells[2][c] == 1) return true;
+	}
+	if (cells[0][0] == 1 && cells[1][1] == 2 && cells[2][2] == 2) return true;
+	if (cells[0][0] == 2 && cells[1][1] == 2 && cells[2][2] == 1) return true;
+	if (cells[2][0] == 1 && cells[1][1] == 2 && cells[0][2] == 2) return true;
+	if (cells[2][0] == 2 && cells[1][1] == 2 && cells[0][2] == 1) return true;
+	return false;
+}
+void ff(int i, int j, int b)
+{
+	if(vis[i][j][b] || board[i][j][0]=='#') return;
 	
-	int cnt=1;
-
-	for(i=1; i<=N && cnt<=L-1; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
+	vis[i][j][b] =1;
+	if(board[i][j][0]=='M' || board[i][j][0]=='O'){
+		int r=board[i][j][1]-'1', c=board[i][j][2]-'1', idx = r*3+c;
+		int current = (b/pow3[idx])%3; //1==M, 2==O
+		if(current==0)
+		{
+			int add= board[i][j][0]=='M'?1:2;
+			b=(b%pow3[idx])+add*pow3[idx]+(b-b%pow3[idx+1]);
+			
+			if(!vis[i][j][b] && win(b)){
+				ans.insert(b); return;
+			}
+			vis[i][j][b]=true;
+		}
+		//no point if something is there
 	}
-	each(x, ans)
-	pr(x, " "), cnt++;
-	for(; i<=N && cnt<=N; i++)
+	F0R(x, 4)
+	ff(i+dy[x], j+dx[x], b);
+	
+	
+}
+void solve() {
+	re(N);
+	int bx=-1, by=-1;
+	F0R(i, N)
+	F0R(j, N)
 	{
-		if(!p[i])
-		pr(i, " "), cnt++;
+		re(board[i][j][0], board[i][j][1], board[i][j][2]);
+		if(board[i][j][0]=='B'){
+			by=i; bx=j;
+		}
 	}
-	ps();
+	ff(by, bx, 0);
+	ps(ans.size());
+//	ps(ans);
+//	each(x, ans)
+//	{
+//		print(x);
+//	}
 }
-int main() {
-   	int t;
-    re(t);
-    F0R(i, t)
-		solve();
+int main(){
+	pow3[0]=1;
+	F1R(i, 9)
+	pow3[i]=pow3[i-1]*3;
+	solve();
 }
-
-
+//READ THE GD PROMPT BRO, IT's PROB NOT AS HARD AS IT SEEMS
+//THERE IS ALWAYS A POSSIBLE SOLUTION
+//Use Strings instead! If N is too large 10^18+
+//USACO BRUTE FORCE if N<=25

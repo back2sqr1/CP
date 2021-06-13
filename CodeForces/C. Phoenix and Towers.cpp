@@ -254,67 +254,64 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N, L, R, S;
+int N, M, X;
 void solve()
 {
-	re(N, L, R, S);
-	ll d=R-L+1;
-	ll cur=0, t=N;
-	vi ans;
-	FOR(i, N-d+1, N+1)
-	{
-		ans.pb(i);
-		cur+=i;
-	}
-	if(cur<S || S<d*(d+1)/2)
-	{
-		ps(-1);
-		return;
-	}
-	ll dif=abs(cur-S);
-	int i=0;
-	while(i<d && dif)
-	{
-		if(ans[i]<dif+1+i)
-		{
-			dif-=(ans[i]-1-i);
-			ans[i]=i+1;
-		}
-		else
-		{
-			ans[i]-=dif;
-			dif=0;
-		}
-		//ps(ans, dif);
-		i++;
-	}
-	//ps(ans);
-	bool p[N+1]={0};
+	re(N, M, X);
+	vi v(N);
+	re(v);
+	ll sum=0;
 	
-	each(x, ans)
-	p[x]=1;
+	vpi a;
+	F0R(i, N)
+	{
+		a.pb(mp(v[i], i));
+	}
+	sort(all(a), greater<pi>());
+	vi ans(N, 0);
+	ll cur=0, t=1;
+	while(cur<N)
+	{
+		while(cur<N && t<=M)
+		{
+			ans[a[cur].s]=t;
+			t++;
+			cur++;
+		}
+		t--;
+		while(cur<N && t>=1)
+		{
+			ans[a[cur].s]=t;
+			t--;
+			cur++;
+		}
+		t++;
+	}
+	vi check(M, 0); 
+	F0R(i, N)
+	check[ans[i]-1]+=v[i]; 
 	
-	int cnt=1;
-
-	for(i=1; i<=N && cnt<=L-1; i++)
+	int mx=0, mn=INT_MAX;
+	F0R(i, M)
 	{
-		if(!p[i])
-		pr(i, " "), cnt++;
+		mx=max(check[i], mx);
+		mn=min(check[i], mn);	
 	}
-	each(x, ans)
-	pr(x, " "), cnt++;
-	for(; i<=N && cnt<=N; i++)
+	//ps(mx, mn);
+	if(mx-mn>X)	
+	ps("NO");
+	else
 	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	ps();
+		ps("YES");
+		F0R(i, N)
+		pr(ans[i], ' ');
+		
+		ps();
+	}	
+	
 }
 int main() {
-   	int t;
-    re(t);
-    F0R(i, t)
-		solve();
+	int t; re(t);
+	while(t--)
+	solve();
 }
-
-

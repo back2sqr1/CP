@@ -4,11 +4,11 @@ using namespace std;
 using ll = long long;
 using db = long double; // or double, if TL is tight
 using str = string; // yay python!
- 
+
 using pi = pair<int,int>;
 using pl = pair<ll,ll>;
 using pd = pair<db,db>;
- 
+
 using vi = vector<int>;
 using vb = vector<bool>;
 using vl = vector<ll>;
@@ -17,19 +17,19 @@ using vs = vector<str>;
 using vpi = vector<pi>;
 using vpl = vector<pl>; 
 using vpd = vector<pd>;
- 
+
 #define tcT template<class T
 #define tcTU tcT, class U
 // ^ lol this makes everything look weird but I'll try it
 tcT> using V = vector<T>; 
 tcT, size_t SZ> using AR = array<T,SZ>; 
 tcT> using PR = pair<T,T>;
- 
+
 // pairs
 #define mp make_pair
 #define f first
 #define s second
- 
+
 // vectors
 // oops size(x), rbegin(x), rend(x) need C++17
 #define sz(x) int((x).size())
@@ -45,20 +45,19 @@ tcT> using PR = pair<T,T>;
 #define eb emplace_back 
 #define pf push_front
 #define rtn return
- 
+
 #define lb lower_bound
 #define ub upper_bound 
 tcT> int lwb(V<T>& a, const T& b) { return int(lb(all(a),b)-bg(a)); }
- 
+
 // loops
 #define FOR(i,a,b) for (int i = (a); i < (b); ++i)
-#define F1R(i, a) FOR(i, 1, a+1)
 #define F0R(i,a) FOR(i,0,a)
 #define ROF(i,a,b) for (int i = (b)-1; i >= (a); --i)
 #define R0F(i,a) ROF(i,0,a)
 #define rep(a) F0R(_,a)
 #define each(a,x) for (auto& a: x)
- 
+
 const int MOD = 1e9+7; // 998244353;
 const int MX = 2e5+5;
 const ll INF = 1e18; // not too close to LLONG_MAX
@@ -66,7 +65,7 @@ const db PI = acos((db)-1);
 const int dx[4] = {1,0,-1,0}, dy[4] = {0,1,0,-1}; // for every grid problem!!
 mt19937 rng((uint32_t)chrono::steady_clock::now().time_since_epoch().count()); 
 template<class T> using pqg = priority_queue<T,vector<T>,greater<T>>;
- 
+
 // bitwise ops
 // also see https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html
 constexpr int pct(int x) { return __builtin_popcount(x); } // # of bits set
@@ -74,15 +73,15 @@ constexpr int bits(int x) { // assert(x >= 0); // make C++11 compatible until US
 	return x == 0 ? 0 : 31-__builtin_clz(x); } // floor(log2(x)) 
 constexpr int p2(int x) { return 1<<x; }
 constexpr int msk2(int x) { return p2(x)-1; }
- 
+
 ll cdiv(ll a, ll b) { return a/b+((a^b)>0&&a%b); } // divide a by b rounded up
 ll fdiv(ll a, ll b) { return a/b-((a^b)<0&&a%b); } // divide a by b rounded down
- 
+
 tcT> bool ckmin(T& a, const T& b) {
 	return b < a ? a = b, 1 : 0; } // set a = min(a,b)
 tcT> bool ckmax(T& a, const T& b) {
 	return a < b ? a = b, 1 : 0; }
- 
+
 tcTU> T fstTrue(T lo, T hi, U f) {
 	hi ++; assert(lo <= hi); // assuming f is increasing
 	while (lo < hi) { // find first index such that f is true 
@@ -104,9 +103,9 @@ tcT> void remDup(vector<T>& v) { // sort and remove duplicates
 tcTU> void erase(T& t, const U& u) { // don't erase
 	auto it = t.find(u); assert(it != end(t));
 	t.erase(it); } // element that doesn't exist from (multi)set
- 
+
 #define tcTUU tcT, class ...U
- 
+
 inline namespace Helpers {
 	//////////// is_iterable
 	// https://stackoverflow.com/questions/13830158/check-if-a-variable-type-is-iterable
@@ -117,7 +116,7 @@ inline namespace Helpers {
 	                                 >
 	                       > : true_type {};
 	tcT> constexpr bool is_iterable_v = is_iterable<T>::value;
- 
+
 	//////////// is_readable
 	tcT, class = void> struct is_readable : false_type {};
 	tcT> struct is_readable<T,
@@ -126,7 +125,7 @@ inline namespace Helpers {
 	        >
 	    > : true_type {};
 	tcT> constexpr bool is_readable_v = is_readable<T>::value;
- 
+
 	//////////// is_printable
 	// // https://nafe.es/posts/2020-02-29-is-printable/
 	tcT, class = void> struct is_printable : false_type {};
@@ -137,12 +136,12 @@ inline namespace Helpers {
 	    > : true_type {};
 	tcT> constexpr bool is_printable_v = is_printable<T>::value;
 }
- 
+
 inline namespace Input {
 	tcT> constexpr bool needs_input_v = !is_readable_v<T> && is_iterable_v<T>;
 	tcTUU> void re(T& t, U&... u);
 	tcTU> void re(pair<T,U>& p); // pairs
- 
+
 	// re: read
 	tcT> typename enable_if<is_readable_v<T>,void>::type re(T& x) { cin >> x; } // default
 	tcT> void re(complex<T>& c) { T a,b; re(a,b); c = {a,b}; } // complex
@@ -151,7 +150,7 @@ inline namespace Input {
 	tcT> typename enable_if<needs_input_v<T>,void>::type re(T& i) {
 		each(x,i) re(x); }
 	tcTUU> void re(T& t, U&... u) { re(t); re(u...); } // read multiple
- 
+
 	// rv: resize and read vectors
 	void rv(size_t) {}
 	tcTUU> void rv(size_t N, V<T>& t, U&... u);
@@ -161,17 +160,17 @@ inline namespace Input {
 		rv(N,u...); }
 	template<class...U> void rv(size_t, size_t N2, U&... u) {
 		rv(N2,u...); }
- 
+
 	// dumb shortcuts to read in ints
 	void decrement() {} // subtract one from each
 	tcTUU> void decrement(T& t, U&... u) { --t; decrement(u...); }
 	#define ints(...) int __VA_ARGS__; re(__VA_ARGS__);
 	#define int1(...) ints(__VA_ARGS__); decrement(__VA_ARGS__);
 }
- 
+
 inline namespace ToString {
 	tcT> constexpr bool needs_output_v = !is_printable_v<T> && is_iterable_v<T>;
- 
+
 	// ts: string representation to print
 	tcT> typename enable_if<is_printable_v<T>,str>::type ts(T v) {
 		stringstream ss; ss << fixed << setprecision(15) << v;
@@ -195,7 +194,7 @@ inline namespace ToString {
 	}
 	tcT> typename enable_if<needs_output_v<T>,str>::type ts(T v) {
 		return "{"+ts_sep(v,", ")+"}"; }
- 
+
 	// for nested DS
 	template<int, class T> typename enable_if<!needs_output_v<T>,vs>::type 
 	  ts_lev(const T& v) { return {ts(v)}; }
@@ -216,7 +215,7 @@ inline namespace ToString {
 		return res;
 	}
 }
- 
+
 inline namespace Output {
 	template<class T> void pr_sep(ostream& os, str, const T& t) { os << ts(t); }
 	template<class T, class... U> void pr_sep(ostream& os, str sep, const T& t, const U&... u) {
@@ -224,10 +223,9 @@ inline namespace Output {
 	// print w/ no spaces
 	template<class ...T> void pr(const T&... t) { pr_sep(cout,"",t...); } 
 	// print w/ spaces, end with newline
-	void ps() { cout << "\n"; }
+	void ps() { cout << endl; }
 	template<class ...T> void ps(const T&... t) { pr_sep(cout," ",t...); ps(); } 
 	// debug to cerr
-	
 	template<class ...T> void dbg_out(const T&... t) {
 		pr_sep(cerr," | ",t...); cerr << endl; }
 	void loc_info(int line, str names) {
@@ -242,7 +240,7 @@ inline namespace Output {
 		#define dbgl(lev,x) 0
 	#endif
 }
- 
+
 inline namespace FileIO {
 	void setIn(str s)  { freopen(s.c_str(),"r",stdin); }
 	void setOut(str s) { freopen(s.c_str(),"w",stdout); }
@@ -254,67 +252,77 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N, L, R, S;
-void solve()
-{
-	re(N, L, R, S);
-	ll d=R-L+1;
-	ll cur=0, t=N;
-	vi ans;
-	FOR(i, N-d+1, N+1)
-	{
-		ans.pb(i);
-		cur+=i;
-	}
-	if(cur<S || S<d*(d+1)/2)
-	{
-		ps(-1);
-		return;
-	}
-	ll dif=abs(cur-S);
-	int i=0;
-	while(i<d && dif)
-	{
-		if(ans[i]<dif+1+i)
-		{
-			dif-=(ans[i]-1-i);
-			ans[i]=i+1;
-		}
-		else
-		{
-			ans[i]-=dif;
-			dif=0;
-		}
-		//ps(ans, dif);
-		i++;
-	}
-	//ps(ans);
-	bool p[N+1]={0};
-	
-	each(x, ans)
-	p[x]=1;
-	
-	int cnt=1;
 
-	for(i=1; i<=N && cnt<=L-1; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
+// int query(int i) {
+// 	ps("?",i);
+// 	ints(x); 
+// 	rtn x;
+// }
+
+// void finish(int ans) {
+// 	ps("!",ans);
+// 	exit(0);
+// }
+
+int n;
+
+int cur[100][100];
+bool place1() {
+	F0R(i,n) F0R(j,n) if (!(i+j)%2) {
+		if (!cur[i][j]) {
+			cur[i][j] = 1;
+			ps(1,1+i,1+j);
+			return 1;
+		}
 	}
-	each(x, ans)
-	pr(x, " "), cnt++;
-	for(; i<=N && cnt<=N; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	ps();
+	return 0;
 }
+
+bool place2() {
+	F0R(i,n) F0R(j,n) if ((i+j)%2) {
+		if (!cur[i][j]) {
+			cur[i][j] = 1;
+			ps(2,1+i,1+j);
+			return 1;
+		}
+	}
+	return 0;
+}
+
+bool place3() {
+	F0R(i,n) F0R(j,n) {
+		if (!cur[i][j]) {
+			cur[i][j] = 3;
+			ps(3,1+i,1+j);
+			return 1;
+		}
+	}
+	return 0;
+
+}
+
 int main() {
-   	int t;
-    re(t);
-    F0R(i, t)
-		solve();
+	re(n);
+	rep(n*n) {
+		ints(a);
+		if (a == 3) {
+			if (place1()) continue;
+			if (place2()) continue;
+		}
+		if (a == 2) {
+			if (place1()) continue;
+			place3();
+		}
+		if (a == 1) {
+			if (place2()) continue;
+			place3();
+		}
+	}
 }
-
-
+/* stuff you should look for
+	* int overflow, array bounds
+	* special cases (n=1?)
+	* do smth instead of nothing and stay organized
+	* WRITE STUFF DOWN
+	* DON'T GET STUCK ON ONE APPROACH
+*/

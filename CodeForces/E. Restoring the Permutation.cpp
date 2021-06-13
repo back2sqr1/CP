@@ -17,7 +17,7 @@ using vs = vector<str>;
 using vpi = vector<pi>;
 using vpl = vector<pl>; 
 using vpd = vector<pd>;
- 
+using vvi = vector<vi>;
 #define tcT template<class T
 #define tcTU tcT, class U
 // ^ lol this makes everything look weird but I'll try it
@@ -254,67 +254,82 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N, L, R, S;
-void solve()
+long long fp(long long base, long long power) {
+    long long result = 1;
+    while(power > 0) {
+
+        if(power % 2 == 1) { // Can also use (power & 1) to make code even faster
+            result = (result*base) % MOD;
+        }
+        base = (base * base) % MOD;
+        power = power / 2; // Can also use power >>= 1; to make code even faster
+    }
+    return result;
+}
+ll gcd(ll a, ll b)
 {
-	re(N, L, R, S);
-	ll d=R-L+1;
-	ll cur=0, t=N;
-	vi ans;
-	FOR(i, N-d+1, N+1)
-	{
-		ans.pb(i);
-		cur+=i;
-	}
-	if(cur<S || S<d*(d+1)/2)
-	{
-		ps(-1);
-		return;
-	}
-	ll dif=abs(cur-S);
-	int i=0;
-	while(i<d && dif)
-	{
-		if(ans[i]<dif+1+i)
-		{
-			dif-=(ans[i]-1-i);
-			ans[i]=i+1;
-		}
-		else
-		{
-			ans[i]-=dif;
-			dif=0;
-		}
-		//ps(ans, dif);
-		i++;
-	}
-	//ps(ans);
-	bool p[N+1]={0};
-	
-	each(x, ans)
-	p[x]=1;
-	
-	int cnt=1;
-
-	for(i=1; i<=N && cnt<=L-1; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	each(x, ans)
-	pr(x, " "), cnt++;
-	for(; i<=N && cnt<=N; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	ps();
+	return __gcd(a, b);
 }
+int N;
+void placeLeft(vector<int> &q, bool minimize) {
+  set<int> left;
+  for (int i = 1; i <= (int) q.size(); i++) {
+    left.insert(i);
+  }
+  for (int i : q) {
+    if (i != -1) {
+      left.erase(i);
+    }
+  }
+  int lastPlaced = -1;
+  for (int &i : q) {
+    if (i == -1) {
+      set<int>::const_iterator it;
+      if (minimize) {
+        it = left.begin();
+      } else {
+        it = --left.lower_bound(lastPlaced);
+      }
+      i = *it;
+      left.erase(it);
+    } else {
+      lastPlaced = i;
+    }
+  }
+}
+
+void solve() {
+  int n;
+  cin >> n;
+  vector<int> q(n);
+  for (int i = 0; i < n; i++) {
+    cin >> q[i];
+  }
+
+  vector<int> res1(n, -1), res2(n, -1);
+  for (int i = 0, lastPlaced = -1; i < n; lastPlaced = q[i], i++) {
+    if (lastPlaced != q[i]) {
+      res1[i] = q[i];
+      res2[i] = q[i];
+    }
+  }
+  placeLeft(res1, true);
+  placeLeft(res2, false);
+  for (int x : res1) {
+    cout << x << " ";
+  }
+  cout << "\n";
+  for (int x : res2) {
+    cout << x << " ";
+  }
+  cout << "\n";
+}
+
 int main() {
-   	int t;
-    re(t);
-    F0R(i, t)
-		solve();
+    int t; re(t);
+    while(t--)
+	solve();
 }
-
+//READ THE GD PROMPT BRO, IT's PROB NOT AS HARD AS IT SEEMS
+//THERE IS ALWAYS A POSSIBLE SOLUTION
 

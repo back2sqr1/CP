@@ -17,7 +17,7 @@ using vs = vector<str>;
 using vpi = vector<pi>;
 using vpl = vector<pl>; 
 using vpd = vector<pd>;
- 
+using vvi = vector<vi>;
 #define tcT template<class T
 #define tcTU tcT, class U
 // ^ lol this makes everything look weird but I'll try it
@@ -83,14 +83,7 @@ tcT> bool ckmin(T& a, const T& b) {
 tcT> bool ckmax(T& a, const T& b) {
 	return a < b ? a = b, 1 : 0; }
  
-tcTU> T fstTrue(T lo, T hi, U f) {
-	hi ++; assert(lo <= hi); // assuming f is increasing
-	while (lo < hi) { // find first index such that f is true 
-		T mid = lo+(hi-lo)/2;
-		f(mid) ? hi = mid : lo = mid+1; 
-	} 
-	return lo;
-}
+
 tcTU> T lstTrue(T lo, T hi, U f) {
 	lo --; assert(lo <= hi); // assuming f is decreasing
 	while (lo < hi) { // find first index such that f is true 
@@ -254,67 +247,44 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N, L, R, S;
-void solve()
+
+ll K, P;
+char c;
+string s;
+ll N;
+vi cnt;
+auto upd(int i)
 {
-	re(N, L, R, S);
-	ll d=R-L+1;
-	ll cur=0, t=N;
-	vi ans;
-	FOR(i, N-d+1, N+1)
-	{
-		ans.pb(i);
-		cur+=i;
-	}
-	if(cur<S || S<d*(d+1)/2)
-	{
-		ps(-1);
-		return;
-	}
-	ll dif=abs(cur-S);
-	int i=0;
-	while(i<d && dif)
-	{
-		if(ans[i]<dif+1+i)
-		{
-			dif-=(ans[i]-1-i);
-			ans[i]=i+1;
-		}
-		else
-		{
-			ans[i]-=dif;
-			dif=0;
-		}
-		//ps(ans, dif);
-		i++;
-	}
-	//ps(ans);
-	bool p[N+1]={0};
-	
-	each(x, ans)
-	p[x]=1;
-	
-	int cnt=1;
-
-	for(i=1; i<=N && cnt<=L-1; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	each(x, ans)
-	pr(x, " "), cnt++;
-	for(; i<=N && cnt<=N; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	ps();
+	return cnt[i] = (s[i] != '0' ? cnt[i*2+1]:0) + (s[i]!='1' ? cnt[i*2+2] : 0);
 }
-int main() {
-   	int t;
-    re(t);
+void setup()
+{
+	N=1<<K;
+	cnt=vi(2*N, 1);
+	reverse(all(s));	
+	for(int i=N-2; i>=0; i--) // each letter in string
+	upd(i);//ps(cnt);
+}
+void solve() {
+	re(P, c);
+	P=N-P-1;
+	s[P]=c;
+	while(P)
+	{
+		upd(P);
+	//	ps(cnt);
+		P=(P-1)/2;
+	}
+	ps(upd(0));
+//	ps(cnt);
+}
+int main(){
+	re(K, s);
+	setup();
+	int t; re(t);
     F0R(i, t)
-		solve();
+	solve();
 }
-
-
+//READ THE GD PROMPT BRO, IT's PROB NOT AS HARD AS IT SEEMS
+//THERE IS ALWAYS A POSSIBLE SOLUTION
+//Use Strings instead! If N is too large 10^18+

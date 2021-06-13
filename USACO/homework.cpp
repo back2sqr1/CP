@@ -49,7 +49,7 @@ struct Rect{
 const int mxN=2e5;
 int main() {
 	ios_base::sync_with_stdio(false);
-	setIO("homework");
+//	setIO("homework");
 	int n;
 	cin>>n;
 	vector<ll> v;
@@ -92,6 +92,7 @@ int main() {
 		{
 			ks.pb(i);
 		}
+		cout<<(temp)<<' '<<i<<' '<<preM[i]<<endl;;
 	}
 	show(ks);
 }

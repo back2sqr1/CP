@@ -254,67 +254,63 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N, L, R, S;
+int N,M,K;
+int dp[501][501][11];
+V<vi> fir, sec;
 void solve()
 {
-	re(N, L, R, S);
-	ll d=R-L+1;
-	ll cur=0, t=N;
-	vi ans;
-	FOR(i, N-d+1, N+1)
+	re(N, M, K);
+	
+	sec = V<vi>(N,vi(M-1));
+	fir = V<vi>(N-1,vi(M));
+	re(sec,fir);
+	
+	if(K%2)
 	{
-		ans.pb(i);
-		cur+=i;
-	}
-	if(cur<S || S<d*(d+1)/2)
-	{
-		ps(-1);
+		F0R(i, N){
+			F0R(i, M)
+			pr(-1, ' ');
+			
+			ps();
+		}
 		return;
 	}
-	ll dif=abs(cur-S);
-	int i=0;
-	while(i<d && dif)
-	{
-		if(ans[i]<dif+1+i)
-		{
-			dif-=(ans[i]-1-i);
-			ans[i]=i+1;
+	F0R(ti,K/2) {
+		F0R(i,N) F0R(j,M) dp[i][j][ti+1] = MOD;
+		F0R(i,N) F0R(j,M) {
+			if (i+1 < N) {
+				int val = min(dp[i][j][ti],dp[i+1][j][ti]);
+				val += fir[i][j];
+				ckmin(dp[i][j][ti+1],val); //up 
+				ckmin(dp[i+1][j][ti+1],val); //down
+			}
+			if (j+1 < M) {
+				int val = min(dp[i][j][ti],dp[i][j+1][ti]);
+				val += sec[i][j];
+				ckmin(dp[i][j][ti+1],val); //left
+				ckmin(dp[i][j+1][ti+1],val); //right
+			}
 		}
-		else
-		{
-			ans[i]-=dif;
-			dif=0;
+	}
+//	each(x, dp)
+//	{
+//		each(y, x){
+//			each(z, y)
+//			pr(z, " ");
+//			
+//			ps();
+//		}
+//		ps();
+//	}
+	F0R(i,N) {
+		F0R(j,M) {
+			pr(2*dp[i][j][K/2],' ');
 		}
-		//ps(ans, dif);
-		i++;
+		ps();
 	}
-	//ps(ans);
-	bool p[N+1]={0};
-	
-	each(x, ans)
-	p[x]=1;
-	
-	int cnt=1;
-
-	for(i=1; i<=N && cnt<=L-1; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	each(x, ans)
-	pr(x, " "), cnt++;
-	for(; i<=N && cnt<=N; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	ps();
 }
 int main() {
-   	int t;
-    re(t);
-    F0R(i, t)
-		solve();
+//	int t; re(t);
+//	while(t--)
+	solve();
 }
-
-

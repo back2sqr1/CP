@@ -17,7 +17,7 @@ using vs = vector<str>;
 using vpi = vector<pi>;
 using vpl = vector<pl>; 
 using vpd = vector<pd>;
- 
+using vvi = vector<vi>;
 #define tcT template<class T
 #define tcTU tcT, class U
 // ^ lol this makes everything look weird but I'll try it
@@ -60,7 +60,7 @@ tcT> int lwb(V<T>& a, const T& b) { return int(lb(all(a),b)-bg(a)); }
 #define each(a,x) for (auto& a: x)
  
 const int MOD = 1e9+7; // 998244353;
-const int MX = 2e5+5;
+const int MX = 1e5+5;
 const ll INF = 1e18; // not too close to LLONG_MAX
 const db PI = acos((db)-1);
 const int dx[4] = {1,0,-1,0}, dy[4] = {0,1,0,-1}; // for every grid problem!!
@@ -83,22 +83,8 @@ tcT> bool ckmin(T& a, const T& b) {
 tcT> bool ckmax(T& a, const T& b) {
 	return a < b ? a = b, 1 : 0; }
  
-tcTU> T fstTrue(T lo, T hi, U f) {
-	hi ++; assert(lo <= hi); // assuming f is increasing
-	while (lo < hi) { // find first index such that f is true 
-		T mid = lo+(hi-lo)/2;
-		f(mid) ? hi = mid : lo = mid+1; 
-	} 
-	return lo;
-}
-tcTU> T lstTrue(T lo, T hi, U f) {
-	lo --; assert(lo <= hi); // assuming f is decreasing
-	while (lo < hi) { // find first index such that f is true 
-		T mid = lo+(hi-lo+1)/2;
-		f(mid) ? lo = mid : hi = mid-1;
-	} 
-	return lo;
-}
+
+
 tcT> void remDup(vector<T>& v) { // sort and remove duplicates
 	sort(all(v)); v.erase(unique(all(v)),end(v)); }
 tcTU> void erase(T& t, const U& u) { // don't erase
@@ -254,67 +240,67 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N, L, R, S;
-void solve()
+tcTU> T fstTrue(T lo, T hi, U f) {
+	hi ++; assert(lo <= hi); // assuming f is increasing
+	while (lo < hi) { // find first index such that f is true 
+		T mid = lo+(hi-lo)/2;
+		ps(lo, hi, mid, f(mid)); 
+		f(mid) ? hi = mid : lo = mid+1;
+	} 
+	return lo;
+}
+tcTU> T lstTrue(T lo, T hi, U f) {
+	lo --; assert(lo <= hi); // assuming f is decreasing
+	while (lo < hi) { // find first index such that f is true 
+		T mid = lo+(hi-lo+1)/2;
+		f(mid) ? lo = mid : hi = mid-1;
+	} 
+	return lo;
+}
+ll N, M;
+vi g[MX];
+bool vis[MX]={0};
+vpi ans;
+void dfs(int node, int p=-1, bool b=0)
 {
-	re(N, L, R, S);
-	ll d=R-L+1;
-	ll cur=0, t=N;
-	vi ans;
-	FOR(i, N-d+1, N+1)
-	{
-		ans.pb(i);
-		cur+=i;
+	int a=g[node].size(), c=0;
+	vis[node]=1;
+//a-c==1 && a%2
+	each(x, g[node])
+	{	
+		if(!b && !(a%2 && a-c==1))
+		ans.pb({node, x});
+		 
+		if(vis[x])
+		continue;
+			
+		dfs(x, node, !(a%2 && a-c==1));
 	}
-	if(cur<S || S<d*(d+1)/2)
-	{
-		ps(-1);
-		return;
-	}
-	ll dif=abs(cur-S);
-	int i=0;
-	while(i<d && dif)
-	{
-		if(ans[i]<dif+1+i)
-		{
-			dif-=(ans[i]-1-i);
-			ans[i]=i+1;
-		}
-		else
-		{
-			ans[i]-=dif;
-			dif=0;
-		}
-		//ps(ans, dif);
-		i++;
-	}
-	//ps(ans);
-	bool p[N+1]={0};
-	
-	each(x, ans)
-	p[x]=1;
-	
-	int cnt=1;
-
-	for(i=1; i<=N && cnt<=L-1; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	each(x, ans)
-	pr(x, " "), cnt++;
-	for(; i<=N && cnt<=N; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	ps();
 }
-int main() {
-   	int t;
-    re(t);
-    F0R(i, t)
-		solve();
+void solve() {
+	re(N, M);
+	if(M%2)
+	{
+		ps("IMPOSSIBLE");
+		rtn;
+	}
+	F0R(i, M)
+	{
+		ll a, b; re(a, b);
+		g[a].pb(b);
+		g[b].pb(a);
+	}
+	dfs(1);
+	F0R(i, M)
+	{
+		ps(ans[i].f, ans[i].s);
+	}
 }
-
-
+int main(){
+//    F0R(i, t)
+	solve();
+}
+//READ THE GD PROMPT BRO, IT's PROB NOT AS HARD AS IT SEEMS
+//THERE IS ALWAYS A POSSIBLE SOLUTION
+//Use Strings instead! If N is too large 10^18+
+//SPOJ makes a lot of benqs stuff not work

@@ -17,7 +17,7 @@ using vs = vector<str>;
 using vpi = vector<pi>;
 using vpl = vector<pl>; 
 using vpd = vector<pd>;
- 
+using vvi = vector<vi>;
 #define tcT template<class T
 #define tcTU tcT, class U
 // ^ lol this makes everything look weird but I'll try it
@@ -254,67 +254,37 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N, L, R, S;
-void solve()
-{
-	re(N, L, R, S);
-	ll d=R-L+1;
-	ll cur=0, t=N;
-	vi ans;
-	FOR(i, N-d+1, N+1)
-	{
-		ans.pb(i);
-		cur+=i;
-	}
-	if(cur<S || S<d*(d+1)/2)
-	{
-		ps(-1);
-		return;
-	}
-	ll dif=abs(cur-S);
-	int i=0;
-	while(i<d && dif)
-	{
-		if(ans[i]<dif+1+i)
-		{
-			dif-=(ans[i]-1-i);
-			ans[i]=i+1;
-		}
-		else
-		{
-			ans[i]-=dif;
-			dif=0;
-		}
-		//ps(ans, dif);
-		i++;
-	}
-	//ps(ans);
-	bool p[N+1]={0};
-	
-	each(x, ans)
-	p[x]=1;
-	
-	int cnt=1;
-
-	for(i=1; i<=N && cnt<=L-1; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	each(x, ans)
-	pr(x, " "), cnt++;
-	for(; i<=N && cnt<=N; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	ps();
+const int N = 2e5 + 10;
+ll dp[2][N]; int A[2][N], n; vector<int> adj[N];
+ 
+void DFS(int v, int p = -1) {
+    dp[0][v] = dp[1][v] = 0;
+    for (int u : adj[v]) {
+        if (u == p) continue;
+        DFS(u, v);
+        dp[0][v] += max(abs(A[0][v] - A[1][u]) + dp[1][u], dp[0][u] + abs(A[0][v] - A[0][u]));
+        dp[1][v] += max(abs(A[1][v] - A[1][u]) + dp[1][u], dp[0][u] + abs(A[1][v] - A[0][u]));
+    }
 }
+ 
+void solve() {
+    scanf("%d", &n);
+    for (int i = 1; i <= n; i++) scanf("%d%d", &A[0][i], &A[1][i]);
+    fill(adj + 1, adj + n + 1, vector<int>());
+    for (int i = 1; i < n; i++) {
+        int u, v; scanf("%d%d", &u, &v);
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    DFS(1);
+    printf("%lld\n", max(dp[0][1], dp[1][1]));
+}
+
 int main() {
-   	int t;
-    re(t);
-    F0R(i, t)
-		solve();
+    int t; re(t);
+    while(t--)
+	solve();
 }
-
+//READ THE GD PROMPT BRO, IT's PROB NOT AS HARD AS IT SEEMS
+//THERE IS ALWAYS A POSSIBLE SOLUTION
 

@@ -17,7 +17,7 @@ using vs = vector<str>;
 using vpi = vector<pi>;
 using vpl = vector<pl>; 
 using vpd = vector<pd>;
- 
+using vvi = vector<vi>;
 #define tcT template<class T
 #define tcTU tcT, class U
 // ^ lol this makes everything look weird but I'll try it
@@ -83,22 +83,8 @@ tcT> bool ckmin(T& a, const T& b) {
 tcT> bool ckmax(T& a, const T& b) {
 	return a < b ? a = b, 1 : 0; }
  
-tcTU> T fstTrue(T lo, T hi, U f) {
-	hi ++; assert(lo <= hi); // assuming f is increasing
-	while (lo < hi) { // find first index such that f is true 
-		T mid = lo+(hi-lo)/2;
-		f(mid) ? hi = mid : lo = mid+1; 
-	} 
-	return lo;
-}
-tcTU> T lstTrue(T lo, T hi, U f) {
-	lo --; assert(lo <= hi); // assuming f is decreasing
-	while (lo < hi) { // find first index such that f is true 
-		T mid = lo+(hi-lo+1)/2;
-		f(mid) ? lo = mid : hi = mid-1;
-	} 
-	return lo;
-}
+
+
 tcT> void remDup(vector<T>& v) { // sort and remove duplicates
 	sort(all(v)); v.erase(unique(all(v)),end(v)); }
 tcTU> void erase(T& t, const U& u) { // don't erase
@@ -254,67 +240,66 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N, L, R, S;
-void solve()
-{
-	re(N, L, R, S);
-	ll d=R-L+1;
-	ll cur=0, t=N;
+tcTU> T fstTrue(T lo, T hi, U f) {
+	hi ++; assert(lo <= hi); // assuming f is increasing
+	while (lo < hi) { // find first index such that f is true 
+		T mid = lo+(hi-lo)/2;
+		ps(lo, hi, mid, f(mid)); 
+		f(mid) ? hi = mid : lo = mid+1;
+	} 
+	return lo;
+}
+tcTU> T lstTrue(T lo, T hi, U f) {
+	lo --; assert(lo <= hi); // assuming f is decreasing
+	while (lo < hi) { // find first index such that f is true 
+		T mid = lo+(hi-lo+1)/2;
+		f(mid) ? lo = mid : hi = mid-1;
+	} 
+	return lo;
+}
+ll N;
+void solve() {
+	re(N);
+	vl v(N); re(v);
+	double mx=0;
+	vl pre(N+1), suffixMin(N+1);
+	pre[0]=v[0];
+	suffixMin[N-1]=v[N-1];
+	
 	vi ans;
-	FOR(i, N-d+1, N+1)
+	R0F(i, N-1)
 	{
-		ans.pb(i);
-		cur+=i;
+		suffixMin[i]=(min(v[i+1], suffixMin[i+1]));	
 	}
-	if(cur<S || S<d*(d+1)/2)
+	F1R(i, N)
 	{
-		ps(-1);
-		return;
+		pre[i]=pre[i-1]+v[i-1];
 	}
-	ll dif=abs(cur-S);
-	int i=0;
-	while(i<d && dif)
+//	ps(pre);
+//	ps(suffixMin);
+	FOR(i, 1, N-1)
 	{
-		if(ans[i]<dif+1+i)
+		double a=(double)(pre[N]-pre[i]-suffixMin[i])/(double)(N-i-1);
+		if(a>mx)
 		{
-			dif-=(ans[i]-1-i);
-			ans[i]=i+1;
+			mx=a;
+			ans.clear();
+			ans.pb(i);
 		}
-		else
+		else if(a==mx)
 		{
-			ans[i]-=dif;
-			dif=0;
+			ans.pb(i);
 		}
-		//ps(ans, dif);
-		i++;
+//		ps(v[i], ans, mx, a, i, suffixMin[i]);
 	}
-	//ps(ans);
-	bool p[N+1]={0};
-	
-	each(x, ans)
-	p[x]=1;
-	
-	int cnt=1;
-
-	for(i=1; i<=N && cnt<=L-1; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	each(x, ans)
-	pr(x, " "), cnt++;
-	for(; i<=N && cnt<=N; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	ps();
+	F0R(i, ans.size())
+	ps(ans[i]);
 }
-int main() {
-   	int t;
-    re(t);
-    F0R(i, t)
-		solve();
+int main(){
+//    F0R(i, t)
+	setIO("homework");
+	solve();
 }
-
-
+//READ THE GD PROMPT BRO, IT's PROB NOT AS HARD AS IT SEEMS
+//THERE IS ALWAYS A POSSIBLE SOLUTION
+//Use Strings instead! If N is too large 10^18+

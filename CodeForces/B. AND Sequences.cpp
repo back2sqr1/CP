@@ -254,67 +254,55 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N, L, R, S;
+long long fp(long long base, long long power) {
+    long long result = 1;
+    while(power > 0) {
+
+        if(power % 2 == 1) { // Can also use (power & 1) to make code even faster
+            result = (result*base) % MOD;
+        }
+        base = (base * base) % MOD;
+        power = power / 2; // Can also use power >>= 1; to make code even faster
+    }
+    return result;
+}
+ll gcd(ll a, ll b)
+{
+	return __gcd(a, b);
+}
+ll N;
 void solve()
 {
-	re(N, L, R, S);
-	ll d=R-L+1;
-	ll cur=0, t=N;
-	vi ans;
-	FOR(i, N-d+1, N+1)
+	re(N);
+	vi a(N);
+	re(a);
+	int mn=*min_element(all(a));
+	int cnt=0;
+	each(x, a)
 	{
-		ans.pb(i);
-		cur+=i;
-	}
-	if(cur<S || S<d*(d+1)/2)
-	{
-		ps(-1);
-		return;
-	}
-	ll dif=abs(cur-S);
-	int i=0;
-	while(i<d && dif)
-	{
-		if(ans[i]<dif+1+i)
+		if(mn==x)
+		cnt++;
+		
+		if((mn&x)!=mn)
 		{
-			dif-=(ans[i]-1-i);
-			ans[i]=i+1;
+			ps(0);
+			return; // if it's not possible to do the lowest, it doesn't count
 		}
-		else
-		{
-			ans[i]-=dif;
-			dif=0;
-		}
-		//ps(ans, dif);
-		i++;
 	}
-	//ps(ans);
-	bool p[N+1]={0};
-	
-	each(x, ans)
-	p[x]=1;
-	
-	int cnt=1;
-
-	for(i=1; i<=N && cnt<=L-1; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	each(x, ans)
-	pr(x, " "), cnt++;
-	for(; i<=N && cnt<=N; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	ps();
+	int fact=1;
+	F1R(i, N-2) fact=(1LL * fact *i )%MOD; //first and last elements have to equal each other 
+	//factorial cuz that's the possibilities to chose middle nums
+	int ans=(1LL * cnt * (cnt-1))%MOD;
+    ans = (1LL * ans * fact) % MOD;
+	ps(ans);
 }
+
 int main() {
-   	int t;
-    re(t);
-    F0R(i, t)
-		solve();
+   	
+    int t; re(t);
+    while(t--)
+	solve();
 }
-
+//READ THE GOD DAMN PROMPT BRO, IT's PROB NOT AS HARD AS IT SEEMS
+//THERE IS ALWAYS A POSSIBLE SOLUTION
 

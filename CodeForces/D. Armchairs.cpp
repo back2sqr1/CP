@@ -254,67 +254,43 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N, L, R, S;
+ll N;
 void solve()
 {
-	re(N, L, R, S);
-	ll d=R-L+1;
-	ll cur=0, t=N;
-	vi ans;
-	FOR(i, N-d+1, N+1)
+	re(N);
+	vi v(N);
+	re(v);
+	vi ones;
+	F0R(i, N)
 	{
-		ans.pb(i);
-		cur+=i;
+		if(v[i])
+		ones.pb(i);
 	}
-	if(cur<S || S<d*(d+1)/2)
+	int k=ones.size();
+	vector<vector<ll>> dp(N+1, vector<ll>(k+1, INF));
+	dp[0][0]=0;
+	F0R(i, N)
 	{
-		ps(-1);
-		return;
-	}
-	ll dif=abs(cur-S);
-	int i=0;
-	while(i<d && dif)
-	{
-		if(ans[i]<dif+1+i)
+		F0R(j, k+1)
 		{
-			dif-=(ans[i]-1-i);
-			ans[i]=i+1;
+			if(dp[i][j]==INF) continue;
+			dp[i+1][j] = min(dp[i+1][j], dp[i][j]);
+			if(j<k && v[i]==0)
+			{
+				dp[i + 1][j + 1] = min(dp[i + 1][j + 1], dp[i][j] + abs(ones[j] - i));
+			}
 		}
-		else
-		{
-			ans[i]-=dif;
-			dif=0;
-		}
-		//ps(ans, dif);
-		i++;
 	}
-	//ps(ans);
-	bool p[N+1]={0};
-	
-	each(x, ans)
-	p[x]=1;
-	
-	int cnt=1;
-
-	for(i=1; i<=N && cnt<=L-1; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	each(x, ans)
-	pr(x, " "), cnt++;
-	for(; i<=N && cnt<=N; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	ps();
+//	each(a, dp)
+//	{
+//		ps(a);
+//	}
+	ps(dp[N][k]);
 }
 int main() {
-   	int t;
-    re(t);
-    F0R(i, t)
-		solve();
+//	int t; re(t);
+//	while(t--)
+	solve();
 }
 
 

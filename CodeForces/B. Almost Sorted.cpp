@@ -17,7 +17,7 @@ using vs = vector<str>;
 using vpi = vector<pi>;
 using vpl = vector<pl>; 
 using vpd = vector<pd>;
- 
+using vvi = vector<vi>;
 #define tcT template<class T
 #define tcTU tcT, class U
 // ^ lol this makes everything look weird but I'll try it
@@ -83,14 +83,7 @@ tcT> bool ckmin(T& a, const T& b) {
 tcT> bool ckmax(T& a, const T& b) {
 	return a < b ? a = b, 1 : 0; }
  
-tcTU> T fstTrue(T lo, T hi, U f) {
-	hi ++; assert(lo <= hi); // assuming f is increasing
-	while (lo < hi) { // find first index such that f is true 
-		T mid = lo+(hi-lo)/2;
-		f(mid) ? hi = mid : lo = mid+1; 
-	} 
-	return lo;
-}
+
 tcTU> T lstTrue(T lo, T hi, U f) {
 	lo --; assert(lo <= hi); // assuming f is decreasing
 	while (lo < hi) { // find first index such that f is true 
@@ -254,67 +247,94 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N, L, R, S;
-void solve()
+ll N, K;
+vi nums;
+bool check(vector<int>& a)
 {
-	re(N, L, R, S);
-	ll d=R-L+1;
-	ll cur=0, t=N;
-	vi ans;
-	FOR(i, N-d+1, N+1)
+	F0R(i, N-1)
 	{
-		ans.pb(i);
-		cur+=i;
+		if(a[i+1]<a[i]-1)
+		return false;
 	}
-	if(cur<S || S<d*(d+1)/2)
-	{
-		ps(-1);
-		return;
-	}
-	ll dif=abs(cur-S);
-	int i=0;
-	while(i<d && dif)
-	{
-		if(ans[i]<dif+1+i)
-		{
-			dif-=(ans[i]-1-i);
-			ans[i]=i+1;
-		}
-		else
-		{
-			ans[i]-=dif;
-			dif=0;
-		}
-		//ps(ans, dif);
-		i++;
-	}
-	//ps(ans);
-	bool p[N+1]={0};
-	
-	each(x, ans)
-	p[x]=1;
-	
-	int cnt=1;
-
-	for(i=1; i<=N && cnt<=L-1; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	each(x, ans)
-	pr(x, " "), cnt++;
-	for(; i<=N && cnt<=N; i++)
-	{
-		if(!p[i])
-		pr(i, " "), cnt++;
-	}
-	ps();
+	return true;
 }
-int main() {
-   	int t;
-    re(t);
-    F0R(i, t)
-		solve();
+void printOut(ll n)
+{
+	int ans=0;
+	vi a;
+	F0R(i, n)
+	a.pb(i+1);
+	
+	do{
+		if(check(a))
+		{
+			ps(a, ans+1); ans++;
+		}
+	}while(next_permutation(all(a)));
+	ps(ans);
 }
 
+tcTU> T fstTrue(T lo, T hi, U f) {
+	hi ++; assert(lo <= hi); // assuming f is increasing
+	while (lo < hi) { // find first index such that f is true 
+		T mid = lo+(hi-lo)/2;
+		f(mid) ? hi = mid : lo = mid+1; 
+	} 
+	return lo;
+}
+long long fp(long long base, long long power) {
+    long long result = 1;
+    while(power > 0) {
+
+        if(power % 2 == 1) { // Can also use (power & 1) to make code even faster
+            result = (result*base);
+        }
+        base = (base * base);
+        power = power / 2; // Can also use power >>= 1; to make code even faster
+    }
+    return result;
+}
+void solve() {
+    int n;
+    ll k;
+    cin >> n >> k;
+ 
+    if(n < 62 && k > 1LL << (n - 1)) {
+        cout << "-1\n";
+        return;
+    }
+ 
+    string s;
+    for(int i = 0; i < n; i++)
+        s += '0';
+    k--;
+    for(ll b = 0; b < min(60LL, (ll)(n - 1)); b++) {
+        if((k >> b) & 1)
+            s[n - 2 - b] = '1';
+    }
+    int cur = 1, sz = 1;
+    vector<int> ans;
+    for(int i = 0; i < n; i++) {
+        if(s[i] == '0') {
+            for(int j = cur + sz - 1; j >= cur; j--)
+                ans.push_back(j);
+            cur += sz;
+            sz = 1;
+        }
+        else
+            sz++;
+    }
+    for(auto &x : ans)
+        cout << x << " ";
+    cout << '\n';
+}
+int main(){
+	int t; re(t);
+    while(t--)
+	solve();
+	
+}
+//READ THE GD PROMPT BRO, IT's PROB NOT AS HARD AS IT SEEMS
+//THERE IS ALWAYS A POSSIBLE SOLUTION
+//Use Strings instead! If N is too large 10^18+
 

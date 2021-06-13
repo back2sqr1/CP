@@ -17,7 +17,7 @@ using vs = vector<str>;
 using vpi = vector<pi>;
 using vpl = vector<pl>; 
 using vpd = vector<pd>;
- 
+using vvi = vector<vi>;
 #define tcT template<class T
 #define tcTU tcT, class U
 // ^ lol this makes everything look weird but I'll try it
@@ -83,14 +83,7 @@ tcT> bool ckmin(T& a, const T& b) {
 tcT> bool ckmax(T& a, const T& b) {
 	return a < b ? a = b, 1 : 0; }
  
-tcTU> T fstTrue(T lo, T hi, U f) {
-	hi ++; assert(lo <= hi); // assuming f is increasing
-	while (lo < hi) { // find first index such that f is true 
-		T mid = lo+(hi-lo)/2;
-		f(mid) ? hi = mid : lo = mid+1; 
-	} 
-	return lo;
-}
+
 tcTU> T lstTrue(T lo, T hi, U f) {
 	lo --; assert(lo <= hi); // assuming f is decreasing
 	while (lo < hi) { // find first index such that f is true 
@@ -254,19 +247,50 @@ inline namespace FileIO {
 		if (sz(s)) setIn(s+".in"), setOut(s+".out"); // for old USACO
 	}
 }
-ll N, M, X;
-void solve()
-{
-	re(N, M, X);
-	int col=ceil(X/N), row=X%2;
-	cout<<col+row*M<<endl;
-}
 
-int main() {
-   	
-    int t; re(t);
-    while(t- -)
+ll N;
+const int MMMAX=1e6+5;
+ll cnt[MMMAX]={0};
+void solve() {
+	re(N);
+	cnt[0]=1;
+	vi a(N);
+	re(a);
+	F0R(i, N)
+	{		
+		vi cur;
+		for(int j=1; j*j<=a[i]; j++)
+		{
+			if(a[i]%j==0)
+			{
+				cur.pb(j);
+				if(j!=a[i]/j)
+				cur.pb(a[i]/j);
+			}
+		}
+		sort(all(cur));
+		reverse(all(cur));
+		each(x , cur)
+		{
+			cnt[x]+=cnt[x-1];
+			cnt[x]%=MOD;
+		}
+	}
+	ll ans=0;
+	F1R(i, N)
+	{
+		ans+=cnt[i];
+	}
+	ans%=MOD;
+	ps(ans);
+}
+int main(){
+//	int t; re(t);
+//    F0R(i, t)
+	//ps("HELLO");
 	solve();
 }
-
+//READ THE GD PROMPT BRO, IT's PROB NOT AS HARD AS IT SEEMS
+//THERE IS ALWAYS A POSSIBLE SOLUTION
+//Use Strings instead! If N is too large 10^18+
 
