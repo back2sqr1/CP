@@ -259,41 +259,45 @@ tcTU> T lstTrue(T lo, T hi, U f) {
 }
 ll N, M;
 vi g[MX];
-bool vis[MX]={0};
+int vis[MX]={0};
+int timer=1;
 vpi ans;
-void dfs(int node, int p=-1, bool b=0)
-{
-	int a=g[node].size(), c=0;
-	vis[node]=1;
-//a-c==1 && a%2
-	each(x, g[node])
-	{	
-		if(!b && !(a%2 && a-c==1))
-		ans.pb({node, x});
-		 
-		if(vis[x])
-		continue;
-			
-		dfs(x, node, !(a%2 && a-c==1));
+int odd[MX]={0};
+void dfs(int node, int parent = 0) {
+	vis[node] = timer++;
+	for (int i : g[node]) if (i != parent) {
+		if (!vis[i]) {
+			dfs(i, node);
+			if (odd[i]) {
+				ans.push_back({i, node});
+				odd[i] = 0;
+			} else {
+				ans.push_back({node, i});
+				odd[node] ^= 1;
+			}
+		} else if (vis[node] > vis[i]) {
+			ans.push_back({node, i});
+			odd[node] ^= 1;
+		}
 	}
 }
 void solve() {
 	re(N, M);
-	if(M%2)
-	{
-		ps("IMPOSSIBLE");
-		rtn;
-	}
 	F0R(i, M)
 	{
 		ll a, b; re(a, b);
 		g[a].pb(b);
 		g[b].pb(a);
 	}
-	dfs(1);
-	F0R(i, M)
-	{
-		ps(ans[i].f, ans[i].s);
+	F1R(i, N)
+	if(!vis[i])
+	dfs(i);
+	if (accumulate(odd + 1, odd + N + 1, 0)) printf("IMPOSSIBLE");
+	else{
+		F0R(i, M)
+		{
+			ps(ans[i].f, ans[i].s);
+		}	
 	}
 }
 int main(){
